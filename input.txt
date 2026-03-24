@@ -1,0 +1,185 @@
+#############################################
+# INTELLIGENT EVACUATION SIMULATOR INPUT
+#############################################
+
+# GENERAL RULES
+#
+# 1. The environment is modeled as a graph.
+# 2. Nodes represent:
+#    - ROOM
+#    - JUNCTION
+#    - EXIT
+#
+# 3. Edges represent corridor segments.
+#    Edges are PHYSICALLY bidirectional.
+#    The simulator decides movement direction dynamically.
+#
+# 4. Each edge has:
+#    length_m                : corridor length (meters)
+#    speed_mps               : walking speed (meters/sec)
+#    entry_capacity_per_sec  : max people allowed to enter per second
+#    occupancy_limit         : max people physically allowed on edge
+#    hazard_penalty          : additional travel cost
+#    active                  : 1=usable, 0=blocked
+#
+# 5. Travel time of edge is calculated as:
+#    travel_time = ceil(length_m / speed_mps)
+#
+# 6. EXIT nodes have service rate (people/sec).
+#
+# 7. Simulation moves groups of CHUNK_SIZE people.
+#
+# 8. Rooms may split people to multiple exits.
+#
+# 9. Corridors may be used simultaneously by different groups
+#    if capacity and occupancy allow.
+#
+# 10. Simulation step size is TIME_STEP seconds.
+
+##################################################
+# SCENARIO SELECTION
+##################################################
+
+ACTIVE_SCENARIO EASY
+
+##################################################
+# SCENARIO EASY
+##################################################
+
+SCENARIO EASY
+
+TIME_STEP 1
+CHUNK_SIZE 2
+
+# Small building
+# 3 rooms, 1 junction, 1 exit
+
+NODES 5
+# id  type      name  people  exit_rate
+1    ROOM      R1     20      0
+2    ROOM      R2     15      0
+3    ROOM      R3     10      0
+4    JUNCTION  J1     0       0
+5    EXIT      E1     0       4
+
+EDGES 4
+# id  A  B  length speed entry_cap occupancy hazard active
+1    1  4  1.0    1.2   4         6        0      1
+2    2  4  1.0    1.2   4         6        0      1
+3    3  4  1.0    1.2   4         6        0      1
+4    4  5  2.0    1.2   4         8        0      1
+
+END_SCENARIO
+
+
+##################################################
+# SCENARIO MEDIUM
+##################################################
+
+SCENARIO MEDIUM
+
+TIME_STEP 1
+CHUNK_SIZE 2
+
+# 6 rooms
+# 3 junctions
+# 2 exits
+# corridor chain layout
+
+NODES 11
+# id type name people exit_rate
+1 ROOM R1 50 0
+2 ROOM R2 40 0
+3 ROOM R3 60 0
+4 ROOM R4 25 0
+5 ROOM R5 30 0
+6 ROOM R6 70 0
+7 JUNCTION J1 0 0
+8 JUNCTION J2 0 0
+9 JUNCTION J3 0 0
+10 EXIT E1 0 3
+11 EXIT E2 0 4
+
+EDGES 10
+# id A B length speed entry_cap occupancy hazard active
+1 1 7 1.0 1.2 5 5 0 1
+2 4 7 1.0 1.2 5 5 0 1
+3 2 8 1.0 1.2 5 5 0 1
+4 5 8 1.0 1.2 5 5 0 1
+5 3 9 1.0 1.2 5 5 0 1
+6 6 9 1.0 1.2 5 5 0 1
+7 7 8 5.0 1.2 5 10 0 1
+8 8 9 5.0 1.2 5 10 0 1
+9 7 10 2.0 1.2 3 6 0 1
+10 9 11 2.0 1.2 4 8 0 1
+
+END_SCENARIO
+
+
+##################################################
+# SCENARIO HARD
+##################################################
+
+SCENARIO HARD
+
+TIME_STEP 1
+CHUNK_SIZE 2
+
+# Large building
+# 10 rooms
+# 5 junctions
+# 3 exits
+# multiple alternative routes
+# hazard penalties added
+
+NODES 18
+# id type name people exit_rate
+1 ROOM R1 80 0
+2 ROOM R2 65 0
+3 ROOM R3 55 0
+4 ROOM R4 40 0
+5 ROOM R5 70 0
+6 ROOM R6 45 0
+7 ROOM R7 60 0
+8 ROOM R8 35 0
+9 ROOM R9 50 0
+10 ROOM R10 75 0
+
+11 JUNCTION J1 0 0
+12 JUNCTION J2 0 0
+13 JUNCTION J3 0 0
+14 JUNCTION J4 0 0
+15 JUNCTION J5 0 0
+
+16 EXIT E1 0 3
+17 EXIT E2 0 4
+18 EXIT E3 0 5
+
+EDGES 18
+# id A B length speed entry_cap occupancy hazard active
+1 1 11 1.0 1.2 6 6 0 1
+2 2 11 1.0 1.2 6 6 0 1
+3 3 12 1.0 1.2 6 6 0 1
+4 4 12 1.0 1.2 6 6 0 1
+5 5 13 1.0 1.2 6 6 0 1
+6 6 13 1.0 1.2 6 6 0 1
+7 7 14 1.0 1.2 6 6 0 1
+8 8 14 1.0 1.2 6 6 0 1
+9 9 15 1.0 1.2 6 6 0 1
+10 10 15 1.0 1.2 6 6 0 1
+
+11 11 12 6.0 1.2 6 12 0 1
+12 12 13 6.0 1.2 6 12 1 1
+13 13 14 6.0 1.2 6 12 0 1
+14 14 15 6.0 1.2 6 12 0 1
+
+15 11 16 2.0 1.2 3 6 0 1
+16 13 17 2.0 1.2 4 8 0 1
+17 15 18 2.0 1.2 5 10 0 1
+18 12 17 4.0 1.2 5 10 2 1
+
+END_SCENARIO
+
+#############################################
+# END OF INPUT FILE
+#############################################
