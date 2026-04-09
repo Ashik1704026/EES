@@ -1,0 +1,80 @@
+DIJKSTRA SHORTEST-PATH MODULE
+
+Purpose:
+Compute the shortest route from every active room to every active exit.
+Edge weight = travel_time_sec + hazard_penalty.
+
+Pseudocode:
+
+1. Build adjacency list from all active physical edges.
+2. Let Rooms = all active ROOM nodes.
+3. Let Exits = all active EXIT nodes.
+4. For each room r in Rooms:
+   4.1 Initialize dist[node] = INF for every node.
+   4.2 Initialize prev_node[node] = UNDEFINED.
+   4.3 Initialize prev_edge[node] = UNDEFINED.
+   4.4 Set dist[r] = 0.
+   4.5 Push (0, r) into min-priority-queue.
+   4.6 While queue is not empty:
+       4.6.1 Pop node u with smallest current distance.
+       4.6.2 If popped distance is stale, continue.
+       4.6.3 For each neighbor v of u through edge e:
+             - Skip if edge e is inactive.
+             - Skip if node v is inactive.
+             - new_cost = dist[u] + weight(e)
+             - If new_cost < dist[v]:
+               * dist[v] = new_cost
+               * prev_node[v] = u
+               * prev_edge[v] = e
+               * push (new_cost, v) into queue
+   4.7 For each exit x in Exits:
+       4.7.1 If dist[x] is INF, mark route unreachable.
+       4.7.2 Otherwise reconstruct node path and edge path by backtracking
+             from x to r using prev_node and prev_edge.
+       4.7.3 Save:
+             room_id, exit_id, reachable, static_cost, node_path, edge_path
+
+Output:
+- One route record for each (room, exit) pair.
+
+Theoretical Complexity:
+
+- Let:
+  V = number of nodes
+  E = number of edges
+  R = number of active rooms
+  X = number of active exits
+
+- Time:
+  O(R * (V + E) log V) using a binary-heap priority queue.
+  Path reconstruction for all exits adds O(R * X * path_length), which is
+  usually much smaller than the Dijkstra frontier work.
+
+- Space:
+  O(V + E) for the graph and O(V) extra per Dijkstra run.
+
+Empirical Complexity On Your Machine:
+
+Machine:
+- Intel Core i9 9th Gen
+- 16 GB DDR4
+- C++ optimized build (-O2)
+
+Measured average runtime per call:
+
+- EASY   (V=5,  E=4):   0.0072 ms
+- MEDIUM (V=11, E=10):  0.0269 ms
+- HARD   (V=18, E=18):  0.0775 ms
+
+Empirical interpretation:
+
+- Runtime stays extremely small on all provided scenarios.
+- Growth is consistent with the theory: as graph size grows, runtime rises
+  slightly faster than linear because of repeated heap operations.
+- In practice, this module is not the bottleneck in this project.
+
+Practical Takeaway:
+
+- Theory says Dijkstra is graph-size driven.
+- Empirical runs confirm it scales very well for the current building graphs.
+- For this project, the scheduler is much more expensive than routing.

@@ -1,0 +1,157 @@
+SCHEDULER / DYNAMIC SIMULATOR MODULE
+
+Purpose:
+Convert assignments into small groups and simulate their movement through
+shared corridor resources over discrete 1-second time steps.
+
+Pseudocode:
+
+Part A: Group Generation
+
+1. For each assignment (room r, exit x, assigned_people p):
+   1.1 Find the stored route from r to x.
+   1.2 Split p into chunks of size CHUNK_SIZE.
+   1.3 For each chunk:
+       - create Group g
+       - g.current_node = room r
+       - g.route_node_path = route.node_path
+       - g.route_edge_path = route.edge_path
+       - g.ready_time = 0
+       - put g into the waiting queue of room r
+
+Part B: Time-Step Simulation
+
+2. Initialize:
+   - waiting queues for nodes
+   - exit queues for exits
+   - dynamic state for every edge
+   - statistics containers
+3. For each second t = 0, 1, 2, ... until all groups finish or stuck:
+
+   Step 1: Clear completed traversals
+   3.1 For each edge e:
+       while first active traversal on e has leave_time == t:
+         - remove traversal
+         - reduce edge occupancy
+         - move group to destination node
+         - if destination is EXIT:
+             push group into that exit queue
+           else:
+             push group into destination waiting queue
+         - log arrival event
+
+   Step 2: Serve exit queues
+   3.2 For each exit x:
+       capacity = exit_service_rate[x]
+       while capacity > 0 and exit queue is not empty:
+         - serve the front group partially or fully
+         - reduce remaining people in that group
+         - if group reaches zero remaining people:
+             mark finished and remove from queue
+         - update evacuation statistics
+         - log exit service event
+
+   Step 3: Dispatch waiting groups onto edges
+   3.3 For each non-exit node u:
+       - sort waiting groups by:
+         a. higher priority
+         b. earlier ready_time
+         c. shorter remaining route
+         d. smaller group_id
+       - for each waiting group g:
+         * next edge = route_edge_path[current_step_index]
+         * next node = route_node_path[current_step_index + 1]
+         * check:
+           - edge active
+           - entered_this_second_total + group_size <= entry_capacity_per_sec
+           - current_occupancy_total + group_size <= occupancy_limit
+         * if allowed:
+           - create traversal event
+           - enter_time = t
+           - leave_time = t + travel_time(edge)
+           - update edge counters and occupancy
+           - remove g from node waiting queue
+           - log dispatch event
+         * else:
+           - keep g waiting
+
+   Step 4: Reset per-second edge-entry counters
+   3.4 For each edge e:
+       - reset entered_this_second_total to 0
+       - update saturation statistics
+
+   Step 5: Check termination
+   3.5 If all groups finished:
+       - mark completed and stop
+   3.6 If no progress has occurred for many consecutive seconds:
+       - mark simulation stuck and stop
+
+4. Produce:
+   - timeline log
+   - exit queue log
+   - edge utilization log
+   - room waiting statistics
+   - final evacuation metrics
+
+Theoretical Complexity:
+
+- Let:
+  G = number of generated groups
+  T = number of simulated time steps
+  E = number of edges
+  N = number of nodes
+
+- Time:
+  The dominant work is repeated queue processing and sorting of waiting groups.
+  A practical upper bound for this implementation is:
+
+  O(T * (E + N + G log G))
+
+  Reason:
+  - each second resets/updates all edges
+  - each second may inspect all node queues
+  - sorting waiting groups dominates when many groups are queued
+
+  More detailed view:
+  - traversal completion work is proportional to total edge entries
+  - exit service work is proportional to total groups/partials served
+  - dispatch sorting is the most expensive repeated step
+
+- Space:
+  O(G + E + N)
+  for groups, edge states, waiting queues, exit queues, and logs
+
+Empirical Complexity On Your Machine:
+
+Machine:
+- Intel Core i9 9th Gen
+- 16 GB DDR4
+- C++ optimized build (-O2)
+
+Measured average runtime per call:
+
+- EASY   : 0.1088 ms
+- MEDIUM : 0.8503 ms
+- HARD   : 1.8348 ms
+
+Empirical interpretation:
+
+- This is the dominant algorithm in the project.
+- Growth is much larger than in Dijkstra or Assignment because simulation cost
+  depends not only on graph size, but also on:
+  - total people
+  - number of generated groups
+  - route lengths
+  - congestion and queueing over time
+  - total evacuation duration
+
+- Observed scaling:
+  - EASY -> MEDIUM: about 7.8x slower
+  - MEDIUM -> HARD: about 2.2x slower
+
+Practical Takeaway:
+
+- Theory says the scheduler is driven by both time horizon and queue sizes.
+- Empirical results confirm that this module is the true bottleneck.
+- On your current hardware, the tested scenarios still run comfortably fast,
+  but this is the first algorithm that will matter if scenario size grows.
