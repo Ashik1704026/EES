@@ -1,0 +1,925 @@
+============================================================
+INTELLIGENT EMERGENCY EVACUATION PLANNING SYSTEM
+============================================================
+
+ACTIVE SCENARIO: MEDIUM
+SIMULATION STATUS: COMPLETED
+
+------------------------------------------------------------
+1. SCENARIO SUMMARY
+------------------------------------------------------------
+Time Step (sec): 1
+Chunk Size: 3
+
+Total Nodes: 11
+Total Edges: 10
+Total Rooms: 6
+Total Junctions: 3
+Total Exits: 2
+Total Initial People: 275
+
+Exit Information:
+  E1 -> service rate = 3 people/sec
+  E2 -> service rate = 4 people/sec
+
+Node List:
+  [1] ROOM      R1   people=50
+  [2] ROOM      R2   people=40
+  [3] ROOM      R3   people=60
+  [4] ROOM      R4   people=25
+  [5] ROOM      R5   people=30
+  [6] ROOM      R6   people=70
+  [7] JUNCTION  J1  
+  [8] JUNCTION  J2  
+  [9] JUNCTION  J3  
+  [10] EXIT      E1   rate=3
+  [11] EXIT      E2   rate=4
+
+Edge List:
+  [1] R1 <-> J1   length=1  speed=1.2  travel_time=1  entry_cap=5  occ_limit=5  hazard=0  active=1
+  [2] R4 <-> J1   length=1  speed=1.2  travel_time=1  entry_cap=5  occ_limit=5  hazard=0  active=1
+  [3] R2 <-> J2   length=1  speed=1.2  travel_time=1  entry_cap=5  occ_limit=5  hazard=0  active=1
+  [4] R5 <-> J2   length=1  speed=1.2  travel_time=1  entry_cap=5  occ_limit=5  hazard=0  active=1
+  [5] R3 <-> J3   length=1  speed=1.2  travel_time=1  entry_cap=5  occ_limit=5  hazard=0  active=1
+  [6] R6 <-> J3   length=1  speed=1.2  travel_time=1  entry_cap=5  occ_limit=5  hazard=0  active=1
+  [7] J1 <-> J2   length=5  speed=1.2  travel_time=5  entry_cap=5  occ_limit=10  hazard=0  active=1
+  [8] J2 <-> J3   length=5  speed=1.2  travel_time=5  entry_cap=5  occ_limit=10  hazard=0  active=1
+  [9] J1 <-> E1   length=2  speed=1.2  travel_time=2  entry_cap=3  occ_limit=6  hazard=0  active=1
+  [10] J3 <-> E2   length=2  speed=1.2  travel_time=2  entry_cap=4  occ_limit=8  hazard=0  active=1
+
+------------------------------------------------------------
+2. VALIDATION RESULTS
+------------------------------------------------------------
+Graph Loaded Successfully: YES
+All Active Edges Valid: YES
+All Exit Rates Valid: YES
+All Rooms Have Nonnegative Population: YES
+All Rooms Reach At Least One Exit: YES
+Warnings: NONE
+
+------------------------------------------------------------
+3. DIJKSTRA ROUTE TABLE
+------------------------------------------------------------
+Format:
+Room -> Exit | Reachable | Cost | Node Path | Edge Path
+
+R1 -> E1 | YES | 3 | R1 -> J1 -> E1 | 1, 9
+R1 -> E2 | YES | 13 | R1 -> J1 -> J2 -> J3 -> E2 | 1, 7, 8, 10
+R2 -> E1 | YES | 8 | R2 -> J2 -> J1 -> E1 | 3, 7, 9
+R2 -> E2 | YES | 8 | R2 -> J2 -> J3 -> E2 | 3, 8, 10
+R3 -> E1 | YES | 13 | R3 -> J3 -> J2 -> J1 -> E1 | 5, 8, 7, 9
+R3 -> E2 | YES | 3 | R3 -> J3 -> E2 | 5, 10
+R4 -> E1 | YES | 3 | R4 -> J1 -> E1 | 2, 9
+R4 -> E2 | YES | 13 | R4 -> J1 -> J2 -> J3 -> E2 | 2, 7, 8, 10
+R5 -> E1 | YES | 8 | R5 -> J2 -> J1 -> E1 | 4, 7, 9
+R5 -> E2 | YES | 8 | R5 -> J2 -> J3 -> E2 | 4, 8, 10
+R6 -> E1 | YES | 13 | R6 -> J3 -> J2 -> J1 -> E1 | 6, 8, 7, 9
+R6 -> E2 | YES | 3 | R6 -> J3 -> E2 | 6, 10
+
+------------------------------------------------------------
+4. EXIT QUOTAS
+------------------------------------------------------------
+Total People: 275
+Total Exit Service Rate: 7
+
+Quota Formula:
+quota(exit) = round(total_people * exit_rate / total_exit_rate)
+
+Computed Quotas:
+E1 -> 118
+E2 -> 157
+
+Quota Sum Check:
+118 + 157 = 275  [OK]
+
+------------------------------------------------------------
+5. ASSIGNMENT TABLE
+------------------------------------------------------------
+Format:
+Room | Pop | To each Exit | Total Assigned | Status
+
+R1 | 50 | E1=50, E2=0 | 50 | OK
+R2 | 40 | E1=40, E2=0 | 40 | OK
+R3 | 60 | E1=0, E2=60 | 60 | OK
+R4 | 25 | E1=25, E2=0 | 25 | OK
+R5 | 30 | E1=3, E2=27 | 30 | OK
+R6 | 70 | E1=0, E2=70 | 70 | OK
+
+Exit Loads:
+E1 -> 118 / 118
+E2 -> 157 / 157
+
+Unassigned People: 0
+Assignment Status: SUCCESS
+
+------------------------------------------------------------
+6. GROUP GENERATION SUMMARY
+------------------------------------------------------------
+Chunk Size: 3
+
+Format:
+Room -> Exit | Assigned People | Groups Generated
+
+R1 -> E1 | 50 | 17 groups (16 groups of 3, 1 group of 2)
+R2 -> E1 | 40 | 14 groups (13 groups of 3, 1 group of 1)
+R3 -> E2 | 60 | 20 groups (20 groups of 3)
+R4 -> E1 | 25 | 9 groups (8 groups of 3, 1 group of 1)
+R5 -> E1 | 3 | 1 groups (1 group of 3)
+R5 -> E2 | 27 | 9 groups (9 groups of 3)
+R6 -> E2 | 70 | 24 groups (23 groups of 3, 1 group of 1)
+
+Total Groups Generated: 94
+
+------------------------------------------------------------
+7. TIMELINE LOG
+------------------------------------------------------------
+Format:
+t = second | event
+
+t=0 | Group G1 size=3 entered edge R1->J1
+t=0 | Group G17 size=2 entered edge R1->J1
+t=0 | Group G18 size=3 entered edge R2->J2
+t=0 | Group G31 size=1 entered edge R2->J2
+t=0 | Group G32 size=3 entered edge R3->J3
+t=0 | Group G52 size=3 entered edge R4->J1
+t=0 | Group G60 size=1 entered edge R4->J1
+t=0 | Group G61 size=3 entered edge R5->J2
+t=0 | Group G71 size=3 entered edge R6->J3
+t=0 | Group G94 size=1 entered edge R6->J3
+t=1 | Group G71 arrived at J3
+t=1 | Group G94 arrived at J3
+t=1 | Group G32 arrived at J3
+t=1 | Group G61 arrived at J2
+t=1 | Group G18 arrived at J2
+t=1 | Group G31 arrived at J2
+t=1 | Group G52 arrived at J1
+t=1 | Group G60 arrived at J1
+t=1 | Group G1 arrived at J1
+t=1 | Group G17 arrived at J1
+t=1 | Group G2 size=3 entered edge R1->J1
+t=1 | Group G19 size=3 entered edge R2->J2
+t=1 | Group G33 size=3 entered edge R3->J3
+t=1 | Group G53 size=3 entered edge R4->J1
+t=1 | Group G62 size=3 entered edge R5->J2
+t=1 | Group G72 size=3 entered edge R6->J3
+t=1 | Group G1 size=3 entered edge J1->E1
+t=1 | Group G18 size=3 entered edge J2->J1
+t=1 | Group G31 size=1 entered edge J2->J1
+t=1 | Group G32 size=3 entered edge J3->E2
+t=1 | Group G94 size=1 entered edge J3->E2
+t=2 | Group G72 arrived at J3
+t=2 | Group G33 arrived at J3
+t=2 | Group G62 arrived at J2
+t=2 | Group G19 arrived at J2
+t=2 | Group G53 arrived at J1
+t=2 | Group G2 arrived at J1
+t=2 | Group G3 size=3 entered edge R1->J1
+t=2 | Group G20 size=3 entered edge R2->J2
+t=2 | Group G34 size=3 entered edge R3->J3
+t=2 | Group G54 size=3 entered edge R4->J1
+t=2 | Group G63 size=3 entered edge R5->J2
+t=2 | Group G73 size=3 entered edge R6->J3
+t=2 | Group G17 size=2 entered edge J1->E1
+t=2 | Group G60 size=1 entered edge J1->E1
+t=2 | Group G61 size=3 entered edge J2->J1
+t=2 | Group G62 size=3 entered edge J2->J3
+t=2 | Group G71 size=3 entered edge J3->E2
+t=3 | Group G32 arrived at E2
+t=3 | Group G32 joined exit queue E2
+t=3 | Group G94 arrived at E2
+t=3 | Group G94 joined exit queue E2
+t=3 | Group G1 arrived at E1
+t=3 | Group G1 joined exit queue E1
+t=3 | Group G73 arrived at J3
+t=3 | Group G34 arrived at J3
+t=3 | Group G63 arrived at J2
+t=3 | Group G20 arrived at J2
+t=3 | Group G54 arrived at J1
+t=3 | Group G3 arrived at J1
+t=3 | Exit E1 evacuated 3 people
+t=3 | Exit E2 evacuated 4 people
+t=3 | Group G4 size=3 entered edge R1->J1
+t=3 | Group G21 size=3 entered edge R2->J2
+t=3 | Group G35 size=3 entered edge R3->J3
+t=3 | Group G55 size=3 entered edge R4->J1
+t=3 | Group G64 size=3 entered edge R5->J2
+t=3 | Group G74 size=3 entered edge R6->J3
+t=3 | Group G52 size=3 entered edge J1->E1
+t=3 | Group G19 size=3 entered edge J2->J1
+t=3 | Group G63 size=3 entered edge J2->J3
+t=3 | Group G33 size=3 entered edge J3->E2
+t=4 | Group G71 arrived at E2
+t=4 | Group G71 joined exit queue E2
+t=4 | Group G17 arrived at E1
+t=4 | Group G17 joined exit queue E1
+t=4 | Group G60 arrived at E1
+t=4 | Group G60 joined exit queue E1
+t=4 | Group G74 arrived at J3
+t=4 | Group G35 arrived at J3
+t=4 | Group G64 arrived at J2
+t=4 | Group G21 arrived at J2
+t=4 | Group G55 arrived at J1
+t=4 | Group G4 arrived at J1
+t=4 | Exit E1 evacuated 3 people
+t=4 | Exit E2 evacuated 3 people
+t=4 | Group G5 size=3 entered edge R1->J1
+t=4 | Group G22 size=3 entered edge R2->J2
+t=4 | Group G36 size=3 entered edge R3->J3
+t=4 | Group G56 size=3 entered edge R4->J1
+t=4 | Group G65 size=3 entered edge R5->J2
+t=4 | Group G75 size=3 entered edge R6->J3
+t=4 | Group G2 size=3 entered edge J1->E1
+t=4 | Group G64 size=3 entered edge J2->J3
+t=4 | Group G72 size=3 entered edge J3->E2
+t=5 | Group G33 arrived at E2
+t=5 | Group G33 joined exit queue E2
+t=5 | Group G52 arrived at E1
+t=5 | Group G52 joined exit queue E1
+t=5 | Group G75 arrived at J3
+t=5 | Group G36 arrived at J3
+t=5 | Group G65 arrived at J2
+t=5 | Group G22 arrived at J2
+t=5 | Group G56 arrived at J1
+t=5 | Group G5 arrived at J1
+t=5 | Exit E1 evacuated 3 people
+t=5 | Exit E2 evacuated 3 people
+t=5 | Group G6 size=3 entered edge R1->J1
+t=5 | Group G23 size=3 entered edge R2->J2
+t=5 | Group G37 size=3 entered edge R3->J3
+t=5 | Group G57 size=3 entered edge R4->J1
+t=5 | Group G66 size=3 entered edge R5->J2
+t=5 | Group G76 size=3 entered edge R6->J3
+t=5 | Group G53 size=3 entered edge J1->E1
+t=5 | Group G34 size=3 entered edge J3->E2
+t=6 | Group G72 arrived at E2
+t=6 | Group G72 joined exit queue E2
+t=6 | Group G2 arrived at E1
+t=6 | Group G2 joined exit queue E1
+t=6 | Group G18 arrived at J1
+t=6 | Group G31 arrived at J1
+t=6 | Group G76 arrived at J3
+t=6 | Group G37 arrived at J3
+t=6 | Group G66 arrived at J2
+t=6 | Group G23 arrived at J2
+t=6 | Group G57 arrived at J1
+t=6 | Group G6 arrived at J1
+t=6 | Exit E1 evacuated 3 people
+t=6 | Exit E2 evacuated 3 people
+t=6 | Group G7 size=3 entered edge R1->J1
+t=6 | Group G24 size=3 entered edge R2->J2
+t=6 | Group G38 size=3 entered edge R3->J3
+t=6 | Group G58 size=3 entered edge R4->J1
+t=6 | Group G67 size=3 entered edge R5->J2
+t=6 | Group G77 size=3 entered edge R6->J3
+t=6 | Group G3 size=3 entered edge J1->E1
+t=6 | Group G20 size=3 entered edge J2->J1
+t=6 | Group G73 size=3 entered edge J3->E2
+t=7 | Group G34 arrived at E2
+t=7 | Group G34 joined exit queue E2
+t=7 | Group G53 arrived at E1
+t=7 | Group G53 joined exit queue E1
+t=7 | Group G62 arrived at J3
+t=7 | Group G61 arrived at J1
+t=7 | Group G77 arrived at J3
+t=7 | Group G38 arrived at J3
+t=7 | Group G67 arrived at J2
+t=7 | Group G24 arrived at J2
+t=7 | Group G58 arrived at J1
+t=7 | Group G7 arrived at J1
+t=7 | Exit E1 evacuated 3 people
+t=7 | Exit E2 evacuated 3 people
+t=7 | Group G8 size=3 entered edge R1->J1
+t=7 | Group G25 size=3 entered edge R2->J2
+t=7 | Group G39 size=3 entered edge R3->J3
+t=7 | Group G59 size=3 entered edge R4->J1
+t=7 | Group G68 size=3 entered edge R5->J2
+t=7 | Group G78 size=3 entered edge R6->J3
+t=7 | Group G54 size=3 entered edge J1->E1
+t=7 | Group G21 size=3 entered edge J2->J1
+t=7 | Group G65 size=3 entered edge J2->J3
+t=7 | Group G35 size=3 entered edge J3->E2
+t=8 | Group G73 arrived at E2
+t=8 | Group G73 joined exit queue E2
+t=8 | Group G3 arrived at E1
+t=8 | Group G3 joined exit queue E1
+t=8 | Group G63 arrived at J3
+t=8 | Group G19 arrived at J1
+t=8 | Group G78 arrived at J3
+t=8 | Group G39 arrived at J3
+t=8 | Group G68 arrived at J2
+t=8 | Group G25 arrived at J2
+t=8 | Group G59 arrived at J1
+t=8 | Group G8 arrived at J1
+t=8 | Exit E1 evacuated 3 people
+t=8 | Exit E2 evacuated 3 people
+t=8 | Group G9 size=3 entered edge R1->J1
+t=8 | Group G26 size=3 entered edge R2->J2
+t=8 | Group G40 size=3 entered edge R3->J3
+t=8 | Group G69 size=3 entered edge R5->J2
+t=8 | Group G79 size=3 entered edge R6->J3
+t=8 | Group G4 size=3 entered edge J1->E1
+t=8 | Group G22 size=3 entered edge J2->J1
+t=8 | Group G66 size=3 entered edge J2->J3
+t=8 | Group G74 size=3 entered edge J3->E2
+t=9 | Group G35 arrived at E2
+t=9 | Group G35 joined exit queue E2
+t=9 | Group G54 arrived at E1
+t=9 | Group G54 joined exit queue E1
+t=9 | Group G64 arrived at J3
+t=9 | Group G79 arrived at J3
+t=9 | Group G40 arrived at J3
+t=9 | Group G69 arrived at J2
+t=9 | Group G26 arrived at J2
+t=9 | Group G9 arrived at J1
+t=9 | Exit E1 evacuated 3 people
+t=9 | Exit E2 evacuated 3 people
+t=9 | Group G10 size=3 entered edge R1->J1
+t=9 | Group G27 size=3 entered edge R2->J2
+t=9 | Group G41 size=3 entered edge R3->J3
+t=9 | Group G70 size=3 entered edge R5->J2
+t=9 | Group G80 size=3 entered edge R6->J3
+t=9 | Group G55 size=3 entered edge J1->E1
+t=9 | Group G67 size=3 entered edge J2->J3
+t=9 | Group G36 size=3 entered edge J3->E2
+t=10 | Group G74 arrived at E2
+t=10 | Group G74 joined exit queue E2
+t=10 | Group G4 arrived at E1
+t=10 | Group G4 joined exit queue E1
+t=10 | Group G80 arrived at J3
+t=10 | Group G41 arrived at J3
+t=10 | Group G70 arrived at J2
+t=10 | Group G27 arrived at J2
+t=10 | Group G10 arrived at J1
+t=10 | Exit E1 evacuated 3 people
+t=10 | Exit E2 evacuated 3 people
+t=10 | Group G11 size=3 entered edge R1->J1
+t=10 | Group G28 size=3 entered edge R2->J2
+t=10 | Group G42 size=3 entered edge R3->J3
+t=10 | Group G81 size=3 entered edge R6->J3
+t=10 | Group G5 size=3 entered edge J1->E1
+t=10 | Group G75 size=3 entered edge J3->E2
+t=11 | Group G36 arrived at E2
+t=11 | Group G36 joined exit queue E2
+t=11 | Group G55 arrived at E1
+t=11 | Group G55 joined exit queue E1
+t=11 | Group G20 arrived at J1
+t=11 | Group G81 arrived at J3
+t=11 | Group G42 arrived at J3
+t=11 | Group G28 arrived at J2
+t=11 | Group G11 arrived at J1
+t=11 | Exit E1 evacuated 3 people
+t=11 | Exit E2 evacuated 3 people
+t=11 | Group G12 size=3 entered edge R1->J1
+t=11 | Group G29 size=3 entered edge R2->J2
+t=11 | Group G43 size=3 entered edge R3->J3
+t=11 | Group G82 size=3 entered edge R6->J3
+t=11 | Group G56 size=3 entered edge J1->E1
+t=11 | Group G23 size=3 entered edge J2->J1
+t=11 | Group G37 size=3 entered edge J3->E2
+t=12 | Group G75 arrived at E2
+t=12 | Group G75 joined exit queue E2
+t=12 | Group G5 arrived at E1
+t=12 | Group G5 joined exit queue E1
+t=12 | Group G65 arrived at J3
+t=12 | Group G21 arrived at J1
+t=12 | Group G82 arrived at J3
+t=12 | Group G43 arrived at J3
+t=12 | Group G29 arrived at J2
+t=12 | Group G12 arrived at J1
+t=12 | Exit E1 evacuated 3 people
+t=12 | Exit E2 evacuated 3 people
+t=12 | Group G13 size=3 entered edge R1->J1
+t=12 | Group G30 size=3 entered edge R2->J2
+t=12 | Group G44 size=3 entered edge R3->J3
+t=12 | Group G83 size=3 entered edge R6->J3
+t=12 | Group G6 size=3 entered edge J1->E1
+t=12 | Group G24 size=3 entered edge J2->J1
+t=12 | Group G68 size=3 entered edge J2->J3
+t=12 | Group G76 size=3 entered edge J3->E2
+t=13 | Group G37 arrived at E2
+t=13 | Group G37 joined exit queue E2
+t=13 | Group G56 arrived at E1
+t=13 | Group G56 joined exit queue E1
+t=13 | Group G66 arrived at J3
+t=13 | Group G22 arrived at J1
+t=13 | Group G83 arrived at J3
+t=13 | Group G44 arrived at J3
+t=13 | Group G30 arrived at J2
+t=13 | Group G13 arrived at J1
+t=13 | Exit E1 evacuated 3 people
+t=13 | Exit E2 evacuated 3 people
+t=13 | Group G14 size=3 entered edge R1->J1
+t=13 | Group G45 size=3 entered edge R3->J3
+t=13 | Group G84 size=3 entered edge R6->J3
+t=13 | Group G18 size=3 entered edge J1->E1
+t=13 | Group G25 size=3 entered edge J2->J1
+t=13 | Group G69 size=3 entered edge J2->J3
+t=13 | Group G38 size=3 entered edge J3->E2
+t=14 | Group G76 arrived at E2
+t=14 | Group G76 joined exit queue E2
+t=14 | Group G6 arrived at E1
+t=14 | Group G6 joined exit queue E1
+t=14 | Group G67 arrived at J3
+t=14 | Group G84 arrived at J3
+t=14 | Group G45 arrived at J3
+t=14 | Group G14 arrived at J1
+t=14 | Exit E1 evacuated 3 people
+t=14 | Exit E2 evacuated 3 people
+t=14 | Group G15 size=3 entered edge R1->J1
+t=14 | Group G46 size=3 entered edge R3->J3
+t=14 | Group G85 size=3 entered edge R6->J3
+t=14 | Group G31 size=1 entered edge J1->E1
+t=14 | Group G70 size=3 entered edge J2->J3
+t=14 | Group G62 size=3 entered edge J3->E2
+t=15 | Group G38 arrived at E2
+t=15 | Group G38 joined exit queue E2
+t=15 | Group G18 arrived at E1
+t=15 | Group G18 joined exit queue E1
+t=15 | Group G85 arrived at J3
+t=15 | Group G46 arrived at J3
+t=15 | Group G15 arrived at J1
+t=15 | Exit E1 evacuated 3 people
+t=15 | Exit E2 evacuated 3 people
+t=15 | Group G16 size=3 entered edge R1->J1
+t=15 | Group G47 size=3 entered edge R3->J3
+t=15 | Group G86 size=3 entered edge R6->J3
+t=15 | Group G57 size=3 entered edge J1->E1
+t=15 | Group G77 size=3 entered edge J3->E2
+t=16 | Group G62 arrived at E2
+t=16 | Group G62 joined exit queue E2
+t=16 | Group G31 arrived at E1
+t=16 | Group G31 joined exit queue E1
+t=16 | Group G23 arrived at J1
+t=16 | Group G86 arrived at J3
+t=16 | Group G47 arrived at J3
+t=16 | Group G16 arrived at J1
+t=16 | Exit E1 evacuated 1 people
+t=16 | Exit E2 evacuated 3 people
+t=16 | Group G48 size=3 entered edge R3->J3
+t=16 | Group G87 size=3 entered edge R6->J3
+t=16 | Group G7 size=3 entered edge J1->E1
+t=16 | Group G26 size=3 entered edge J2->J1
+t=16 | Group G39 size=3 entered edge J3->E2
+t=17 | Group G77 arrived at E2
+t=17 | Group G77 joined exit queue E2
+t=17 | Group G57 arrived at E1
+t=17 | Group G57 joined exit queue E1
+t=17 | Group G68 arrived at J3
+t=17 | Group G24 arrived at J1
+t=17 | Group G87 arrived at J3
+t=17 | Group G48 arrived at J3
+t=17 | Exit E1 evacuated 3 people
+t=17 | Exit E2 evacuated 3 people
+t=17 | Group G49 size=3 entered edge R3->J3
+t=17 | Group G88 size=3 entered edge R6->J3
+t=17 | Group G58 size=3 entered edge J1->E1
+t=17 | Group G27 size=3 entered edge J2->J1
+t=17 | Group G63 size=3 entered edge J3->E2
+t=18 | Group G39 arrived at E2
+t=18 | Group G39 joined exit queue E2
+t=18 | Group G7 arrived at E1
+t=18 | Group G7 joined exit queue E1
+t=18 | Group G69 arrived at J3
+t=18 | Group G25 arrived at J1
+t=18 | Group G88 arrived at J3
+t=18 | Group G49 arrived at J3
+t=18 | Exit E1 evacuated 3 people
+t=18 | Exit E2 evacuated 3 people
+t=18 | Group G50 size=3 entered edge R3->J3
+t=18 | Group G89 size=3 entered edge R6->J3
+t=18 | Group G61 size=3 entered edge J1->E1
+t=18 | Group G28 size=3 entered edge J2->J1
+t=18 | Group G78 size=3 entered edge J3->E2
+t=19 | Group G63 arrived at E2
+t=19 | Group G63 joined exit queue E2
+t=19 | Group G58 arrived at E1
+t=19 | Group G58 joined exit queue E1
+t=19 | Group G70 arrived at J3
+t=19 | Group G89 arrived at J3
+t=19 | Group G50 arrived at J3
+t=19 | Exit E1 evacuated 3 people
+t=19 | Exit E2 evacuated 3 people
+t=19 | Group G51 size=3 entered edge R3->J3
+t=19 | Group G90 size=3 entered edge R6->J3
+t=19 | Group G8 size=3 entered edge J1->E1
+t=19 | Group G40 size=3 entered edge J3->E2
+t=20 | Group G78 arrived at E2
+t=20 | Group G78 joined exit queue E2
+t=20 | Group G61 arrived at E1
+t=20 | Group G61 joined exit queue E1
+t=20 | Group G90 arrived at J3
+t=20 | Group G51 arrived at J3
+t=20 | Exit E1 evacuated 3 people
+t=20 | Exit E2 evacuated 3 people
+t=20 | Group G91 size=3 entered edge R6->J3
+t=20 | Group G19 size=3 entered edge J1->E1
+t=20 | Group G64 size=3 entered edge J3->E2
+t=21 | Group G40 arrived at E2
+t=21 | Group G40 joined exit queue E2
+t=21 | Group G8 arrived at E1
+t=21 | Group G8 joined exit queue E1
+t=21 | Group G26 arrived at J1
+t=21 | Group G91 arrived at J3
+t=21 | Exit E1 evacuated 3 people
+t=21 | Exit E2 evacuated 3 people
+t=21 | Group G92 size=3 entered edge R6->J3
+t=21 | Group G59 size=3 entered edge J1->E1
+t=21 | Group G29 size=3 entered edge J2->J1
+t=21 | Group G79 size=3 entered edge J3->E2
+t=22 | Group G64 arrived at E2
+t=22 | Group G64 joined exit queue E2
+t=22 | Group G19 arrived at E1
+t=22 | Group G19 joined exit queue E1
+t=22 | Group G27 arrived at J1
+t=22 | Group G92 arrived at J3
+t=22 | Exit E1 evacuated 3 people
+t=22 | Exit E2 evacuated 3 people
+t=22 | Group G93 size=3 entered edge R6->J3
+t=22 | Group G9 size=3 entered edge J1->E1
+t=22 | Group G30 size=3 entered edge J2->J1
+t=22 | Group G41 size=3 entered edge J3->E2
+t=23 | Group G79 arrived at E2
+t=23 | Group G79 joined exit queue E2
+t=23 | Group G59 arrived at E1
+t=23 | Group G59 joined exit queue E1
+t=23 | Group G28 arrived at J1
+t=23 | Group G93 arrived at J3
+t=23 | Exit E1 evacuated 3 people
+t=23 | Exit E2 evacuated 3 people
+t=23 | Group G10 size=3 entered edge J1->E1
+t=23 | Group G80 size=3 entered edge J3->E2
+t=24 | Group G41 arrived at E2
+t=24 | Group G41 joined exit queue E2
+t=24 | Group G9 arrived at E1
+t=24 | Group G9 joined exit queue E1
+t=24 | Exit E1 evacuated 3 people
+t=24 | Exit E2 evacuated 3 people
+t=24 | Group G11 size=3 entered edge J1->E1
+t=24 | Group G42 size=3 entered edge J3->E2
+t=25 | Group G80 arrived at E2
+t=25 | Group G80 joined exit queue E2
+t=25 | Group G10 arrived at E1
+t=25 | Group G10 joined exit queue E1
+t=25 | Exit E1 evacuated 3 people
+t=25 | Exit E2 evacuated 3 people
+t=25 | Group G20 size=3 entered edge J1->E1
+t=25 | Group G81 size=3 entered edge J3->E2
+t=26 | Group G42 arrived at E2
+t=26 | Group G42 joined exit queue E2
+t=26 | Group G11 arrived at E1
+t=26 | Group G11 joined exit queue E1
+t=26 | Group G29 arrived at J1
+t=26 | Exit E1 evacuated 3 people
+t=26 | Exit E2 evacuated 3 people
+t=26 | Group G12 size=3 entered edge J1->E1
+t=26 | Group G43 size=3 entered edge J3->E2
+t=27 | Group G81 arrived at E2
+t=27 | Group G81 joined exit queue E2
+t=27 | Group G20 arrived at E1
+t=27 | Group G20 joined exit queue E1
+t=27 | Group G30 arrived at J1
+t=27 | Exit E1 evacuated 3 people
+t=27 | Exit E2 evacuated 3 people
+t=27 | Group G21 size=3 entered edge J1->E1
+t=27 | Group G65 size=3 entered edge J3->E2
+t=28 | Group G43 arrived at E2
+t=28 | Group G43 joined exit queue E2
+t=28 | Group G12 arrived at E1
+t=28 | Group G12 joined exit queue E1
+t=28 | Exit E1 evacuated 3 people
+t=28 | Exit E2 evacuated 3 people
+t=28 | Group G13 size=3 entered edge J1->E1
+t=28 | Group G82 size=3 entered edge J3->E2
+t=29 | Group G65 arrived at E2
+t=29 | Group G65 joined exit queue E2
+t=29 | Group G21 arrived at E1
+t=29 | Group G21 joined exit queue E1
+t=29 | Exit E1 evacuated 3 people
+t=29 | Exit E2 evacuated 3 people
+t=29 | Group G22 size=3 entered edge J1->E1
+t=29 | Group G44 size=3 entered edge J3->E2
+t=30 | Group G82 arrived at E2
+t=30 | Group G82 joined exit queue E2
+t=30 | Group G13 arrived at E1
+t=30 | Group G13 joined exit queue E1
+t=30 | Exit E1 evacuated 3 people
+t=30 | Exit E2 evacuated 3 people
+t=30 | Group G14 size=3 entered edge J1->E1
+t=30 | Group G66 size=3 entered edge J3->E2
+t=31 | Group G44 arrived at E2
+t=31 | Group G44 joined exit queue E2
+t=31 | Group G22 arrived at E1
+t=31 | Group G22 joined exit queue E1
+t=31 | Exit E1 evacuated 3 people
+t=31 | Exit E2 evacuated 3 people
+t=31 | Group G15 size=3 entered edge J1->E1
+t=31 | Group G83 size=3 entered edge J3->E2
+t=32 | Group G66 arrived at E2
+t=32 | Group G66 joined exit queue E2
+t=32 | Group G14 arrived at E1
+t=32 | Group G14 joined exit queue E1
+t=32 | Exit E1 evacuated 3 people
+t=32 | Exit E2 evacuated 3 people
+t=32 | Group G16 size=3 entered edge J1->E1
+t=32 | Group G45 size=3 entered edge J3->E2
+t=33 | Group G83 arrived at E2
+t=33 | Group G83 joined exit queue E2
+t=33 | Group G15 arrived at E1
+t=33 | Group G15 joined exit queue E1
+t=33 | Exit E1 evacuated 3 people
+t=33 | Exit E2 evacuated 3 people
+t=33 | Group G23 size=3 entered edge J1->E1
+t=33 | Group G67 size=3 entered edge J3->E2
+t=34 | Group G45 arrived at E2
+t=34 | Group G45 joined exit queue E2
+t=34 | Group G16 arrived at E1
+t=34 | Group G16 joined exit queue E1
+t=34 | Exit E1 evacuated 3 people
+t=34 | Exit E2 evacuated 3 people
+t=34 | Group G24 size=3 entered edge J1->E1
+t=34 | Group G84 size=3 entered edge J3->E2
+t=35 | Group G67 arrived at E2
+t=35 | Group G67 joined exit queue E2
+t=35 | Group G23 arrived at E1
+t=35 | Group G23 joined exit queue E1
+t=35 | Exit E1 evacuated 3 people
+t=35 | Exit E2 evacuated 3 people
+t=35 | Group G25 size=3 entered edge J1->E1
+t=35 | Group G46 size=3 entered edge J3->E2
+t=36 | Group G84 arrived at E2
+t=36 | Group G84 joined exit queue E2
+t=36 | Group G24 arrived at E1
+t=36 | Group G24 joined exit queue E1
+t=36 | Exit E1 evacuated 3 people
+t=36 | Exit E2 evacuated 3 people
+t=36 | Group G26 size=3 entered edge J1->E1
+t=36 | Group G85 size=3 entered edge J3->E2
+t=37 | Group G46 arrived at E2
+t=37 | Group G46 joined exit queue E2
+t=37 | Group G25 arrived at E1
+t=37 | Group G25 joined exit queue E1
+t=37 | Exit E1 evacuated 3 people
+t=37 | Exit E2 evacuated 3 people
+t=37 | Group G27 size=3 entered edge J1->E1
+t=37 | Group G47 size=3 entered edge J3->E2
+t=38 | Group G85 arrived at E2
+t=38 | Group G85 joined exit queue E2
+t=38 | Group G26 arrived at E1
+t=38 | Group G26 joined exit queue E1
+t=38 | Exit E1 evacuated 3 people
+t=38 | Exit E2 evacuated 3 people
+t=38 | Group G28 size=3 entered edge J1->E1
+t=38 | Group G86 size=3 entered edge J3->E2
+t=39 | Group G47 arrived at E2
+t=39 | Group G47 joined exit queue E2
+t=39 | Group G27 arrived at E1
+t=39 | Group G27 joined exit queue E1
+t=39 | Exit E1 evacuated 3 people
+t=39 | Exit E2 evacuated 3 people
+t=39 | Group G29 size=3 entered edge J1->E1
+t=39 | Group G48 size=3 entered edge J3->E2
+t=40 | Group G86 arrived at E2
+t=40 | Group G86 joined exit queue E2
+t=40 | Group G28 arrived at E1
+t=40 | Group G28 joined exit queue E1
+t=40 | Exit E1 evacuated 3 people
+t=40 | Exit E2 evacuated 3 people
+t=40 | Group G30 size=3 entered edge J1->E1
+t=40 | Group G68 size=3 entered edge J3->E2
+t=41 | Group G48 arrived at E2
+t=41 | Group G48 joined exit queue E2
+t=41 | Group G29 arrived at E1
+t=41 | Group G29 joined exit queue E1
+t=41 | Exit E1 evacuated 3 people
+t=41 | Exit E2 evacuated 3 people
+t=41 | Group G87 size=3 entered edge J3->E2
+t=42 | Group G68 arrived at E2
+t=42 | Group G68 joined exit queue E2
+t=42 | Group G30 arrived at E1
+t=42 | Group G30 joined exit queue E1
+t=42 | Exit E1 evacuated 3 people
+t=42 | Exit E2 evacuated 3 people
+t=42 | Group G49 size=3 entered edge J3->E2
+t=43 | Group G87 arrived at E2
+t=43 | Group G87 joined exit queue E2
+t=43 | Exit E2 evacuated 3 people
+t=43 | Group G69 size=3 entered edge J3->E2
+t=44 | Group G49 arrived at E2
+t=44 | Group G49 joined exit queue E2
+t=44 | Exit E2 evacuated 3 people
+t=44 | Group G88 size=3 entered edge J3->E2
+t=45 | Group G69 arrived at E2
+t=45 | Group G69 joined exit queue E2
+t=45 | Exit E2 evacuated 3 people
+t=45 | Group G50 size=3 entered edge J3->E2
+t=46 | Group G88 arrived at E2
+t=46 | Group G88 joined exit queue E2
+t=46 | Exit E2 evacuated 3 people
+t=46 | Group G70 size=3 entered edge J3->E2
+t=47 | Group G50 arrived at E2
+t=47 | Group G50 joined exit queue E2
+t=47 | Exit E2 evacuated 3 people
+t=47 | Group G89 size=3 entered edge J3->E2
+t=48 | Group G70 arrived at E2
+t=48 | Group G70 joined exit queue E2
+t=48 | Exit E2 evacuated 3 people
+t=48 | Group G51 size=3 entered edge J3->E2
+t=49 | Group G89 arrived at E2
+t=49 | Group G89 joined exit queue E2
+t=49 | Exit E2 evacuated 3 people
+t=49 | Group G90 size=3 entered edge J3->E2
+t=50 | Group G51 arrived at E2
+t=50 | Group G51 joined exit queue E2
+t=50 | Exit E2 evacuated 3 people
+t=50 | Group G91 size=3 entered edge J3->E2
+t=51 | Group G90 arrived at E2
+t=51 | Group G90 joined exit queue E2
+t=51 | Exit E2 evacuated 3 people
+t=51 | Group G92 size=3 entered edge J3->E2
+t=52 | Group G91 arrived at E2
+t=52 | Group G91 joined exit queue E2
+t=52 | Exit E2 evacuated 3 people
+t=52 | Group G93 size=3 entered edge J3->E2
+t=53 | Group G92 arrived at E2
+t=53 | Group G92 joined exit queue E2
+t=53 | Exit E2 evacuated 3 people
+t=54 | Group G93 arrived at E2
+t=54 | Group G93 joined exit queue E2
+t=54 | Exit E2 evacuated 3 people
+
+------------------------------------------------------------
+8. EXIT QUEUE LOG
+------------------------------------------------------------
+Format:
+t | Exit | People Served | Queue Remaining
+
+t=3 | E1 | 3 | 0
+t=3 | E2 | 4 | 0
+t=4 | E1 | 3 | 0
+t=4 | E2 | 3 | 0
+t=5 | E1 | 3 | 0
+t=5 | E2 | 3 | 0
+t=6 | E1 | 3 | 0
+t=6 | E2 | 3 | 0
+t=7 | E1 | 3 | 0
+t=7 | E2 | 3 | 0
+t=8 | E1 | 3 | 0
+t=8 | E2 | 3 | 0
+t=9 | E1 | 3 | 0
+t=9 | E2 | 3 | 0
+t=10 | E1 | 3 | 0
+t=10 | E2 | 3 | 0
+t=11 | E1 | 3 | 0
+t=11 | E2 | 3 | 0
+t=12 | E1 | 3 | 0
+t=12 | E2 | 3 | 0
+t=13 | E1 | 3 | 0
+t=13 | E2 | 3 | 0
+t=14 | E1 | 3 | 0
+t=14 | E2 | 3 | 0
+t=15 | E1 | 3 | 0
+t=15 | E2 | 3 | 0
+t=16 | E1 | 1 | 0
+t=16 | E2 | 3 | 0
+t=17 | E1 | 3 | 0
+t=17 | E2 | 3 | 0
+t=18 | E1 | 3 | 0
+t=18 | E2 | 3 | 0
+t=19 | E1 | 3 | 0
+t=19 | E2 | 3 | 0
+t=20 | E1 | 3 | 0
+t=20 | E2 | 3 | 0
+t=21 | E1 | 3 | 0
+t=21 | E2 | 3 | 0
+t=22 | E1 | 3 | 0
+t=22 | E2 | 3 | 0
+t=23 | E1 | 3 | 0
+t=23 | E2 | 3 | 0
+t=24 | E1 | 3 | 0
+t=24 | E2 | 3 | 0
+t=25 | E1 | 3 | 0
+t=25 | E2 | 3 | 0
+t=26 | E1 | 3 | 0
+t=26 | E2 | 3 | 0
+t=27 | E1 | 3 | 0
+t=27 | E2 | 3 | 0
+t=28 | E1 | 3 | 0
+t=28 | E2 | 3 | 0
+t=29 | E1 | 3 | 0
+t=29 | E2 | 3 | 0
+t=30 | E1 | 3 | 0
+t=30 | E2 | 3 | 0
+t=31 | E1 | 3 | 0
+t=31 | E2 | 3 | 0
+t=32 | E1 | 3 | 0
+t=32 | E2 | 3 | 0
+t=33 | E1 | 3 | 0
+t=33 | E2 | 3 | 0
+t=34 | E1 | 3 | 0
+t=34 | E2 | 3 | 0
+t=35 | E1 | 3 | 0
+t=35 | E2 | 3 | 0
+t=36 | E1 | 3 | 0
+t=36 | E2 | 3 | 0
+t=37 | E1 | 3 | 0
+t=37 | E2 | 3 | 0
+t=38 | E1 | 3 | 0
+t=38 | E2 | 3 | 0
+t=39 | E1 | 3 | 0
+t=39 | E2 | 3 | 0
+t=40 | E1 | 3 | 0
+t=40 | E2 | 3 | 0
+t=41 | E1 | 3 | 0
+t=41 | E2 | 3 | 0
+t=42 | E1 | 3 | 0
+t=42 | E2 | 3 | 0
+t=43 | E2 | 3 | 0
+t=44 | E2 | 3 | 0
+t=45 | E2 | 3 | 0
+t=46 | E2 | 3 | 0
+t=47 | E2 | 3 | 0
+t=48 | E2 | 3 | 0
+t=49 | E2 | 3 | 0
+t=50 | E2 | 3 | 0
+t=51 | E2 | 3 | 0
+t=52 | E2 | 3 | 0
+t=53 | E2 | 3 | 0
+t=54 | E2 | 3 | 0
+
+------------------------------------------------------------
+9. EDGE UTILIZATION LOG
+------------------------------------------------------------
+Format:
+Edge | Max Occupancy | Total Entries | Saturated Seconds | Utilization %
+
+R1 <-> J1 | 5 | 50 | 1 | 18.5%
+R4 <-> J1 | 4 | 25 | 0 | 9.3%
+R2 <-> J2 | 4 | 40 | 0 | 14.8%
+R5 <-> J2 | 3 | 30 | 0 | 11.1%
+R3 <-> J3 | 3 | 60 | 0 | 22.2%
+R6 <-> J3 | 4 | 70 | 0 | 25.9%
+J1 <-> J2 | 10 | 43 | 3 | 15.9%
+J2 <-> J3 | 9 | 27 | 0 | 10.0%
+J1 <-> E1 | 6 | 118 | 39 | 72.8%
+J3 <-> E2 | 7 | 157 | 1 | 72.7%
+
+------------------------------------------------------------
+10. ROOM WAITING STATISTICS
+------------------------------------------------------------
+Format:
+Room | Initial People | Assigned Exit Split | Max Wait Time | Avg Wait Time
+
+R1 | 50 | E1=50 | 16 sec | 16.6 sec
+R2 | 40 | E1=40 | 17 sec | 24.8 sec
+R3 | 60 | E2=60 | 28 sec | 22.1 sec
+R4 | 25 | E1=25 | 13 sec | 9.6 sec
+R5 | 30 | E1=3, E2=27 | 27 sec | 22.8 sec
+R6 | 70 | E2=70 | 29 sec | 26.7 sec
+
+------------------------------------------------------------
+11. FINAL METRICS
+------------------------------------------------------------
+Routing Status: Phase 2 complete: Dijkstra shortest routes computed.
+Assignment Status: Phase 3 complete: greedy assignment computed successfully.
+Simulation Status: Phase 4 complete: dynamic simulation finished successfully.
+Total Initial People: 275
+Total Evacuated People: 275
+Evacuation Completion Rate: 100.00%
+
+Total Evacuation Time: 54 sec
+Average Completion Time Per Person: 25.9 sec
+Maximum Completion Time: 54 sec
+Maximum Waiting Time At Any Room/Junction: 29 sec
+
+Peak Exit Queue Length:
+  E1 -> 3 people
+  E2 -> 4 people
+
+Peak Edge Occupancy:
+  R1 <-> J1 -> 5
+  R4 <-> J1 -> 4
+  R2 <-> J2 -> 4
+  R5 <-> J2 -> 3
+  R3 <-> J3 -> 3
+  R6 <-> J3 -> 4
+  J1 <-> J2 -> 10
+  J2 <-> J3 -> 9
+  J1 <-> E1 -> 6
+  J3 <-> E2 -> 7
+
+Most Congested Edge:
+  J1 <-> E1 (72.8% utilization)
+
+Simulation Stuck: NO
+All Rooms Served: YES
+All Exits Used Correctly: YES
+
+------------------------------------------------------------
+12. FINAL STATUS
+------------------------------------------------------------
+RESULT: SUCCESS
+All evacuees reached a valid exit and were processed successfully.
+
+============================================================
+END OF OUTPUT
+============================================================

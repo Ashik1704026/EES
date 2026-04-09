@@ -154,6 +154,30 @@ Compile and run quickly in one PowerShell line:
 g++ -std=c++17 -O2 -Wall -Wextra -pedantic main.cpp graph.cpp dijkstra.cpp assignment.cpp scheduler.cpp -o ees.exe; .\ees.exe easy_input.txt easy_output_generated.txt
 ```
 
----
 
-If you want, this README can be extended with a section describing the exact scenario file format accepted by the parser in this codebase.
+
+
+## 11. Visualization Animation Tool
+
+Use `generate_animation.py` to turn any `input.txt`/`output.txt` pair into the evacuation animation slideshow.
+
+1. Install the Python requirements (use the same interpreter you plan to run the script with):
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install networkx matplotlib pillow
+```
+
+2. Run the animator from the project root. By default it reads `input.txt`/`output.txt`, saves `initial_layout.png` and `evacuation_animation.gif`, and prints total frames/duration/filenames (it will also write `evacuation_animation.mp4` if `ffmpeg` exists on `PATH`):
+
+```powershell
+python generate_animation.py
+```
+
+3. Customize the animation inputs/outputs or force the MP4 export with:
+
+```powershell
+python generate_animation.py --input easy_input_ch6.txt --output easy_output.txt --gif easy_evac.gif --mp4 easy_evac.mp4
+```
+
+The script draws rooms (blue), junctions (gray), exits (green), and moving groups (red dots), overlays current time plus evacuated/remaining counters, and keeps the layout fixed so each timestep is easy to follow for non-technical viewers. If you hit issues, rerun with `--help` or share the traceback for troubleshooting.
